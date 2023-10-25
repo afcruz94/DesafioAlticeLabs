@@ -1,6 +1,7 @@
 package org.example.service.tariffs;
 
-import org.example.enums.TariffAlpha;
+import org.example.enums.Buckets;
+import org.example.enums.Tariffs;
 
 import java.util.Objects;
 
@@ -34,10 +35,10 @@ public class Alpha {
     }
 
     private String checkEligibility(Boolean onlyWeekdays, Integer counterA, Boolean roaming, Float bucketB, Float bucketC) {
-        if (onlyWeekdays && counterA < 100) return "A";
+        if (onlyWeekdays && counterA < 100) return Tariffs.ALPHA1.getValue();
         else {
-            if (!roaming && bucketB > 100) return "B";
-            if (roaming && bucketC > 10) return "C";
+            if (!roaming && bucketB > 100) return Tariffs.ALPHA2.getValue();
+            if (roaming && bucketC > 10) return Tariffs.ALPHA3.getValue();
             else return null;
         }
     }
@@ -46,13 +47,13 @@ public class Alpha {
                                Float bucketB, Float bucketC, Integer counterA, Integer counterB, Integer counterC) {
         float price = 0f;
 
-        if (Objects.equals(TariffAlpha.ALPHA1.getValue(), service)) {
+        if (Objects.equals(Tariffs.ALPHA1.getValue(), service)) {
             price = calculateRatingAlphaA(isRoaming, bucketC, counterA);
         }
-        if (Objects.equals(TariffAlpha.ALPHA2.getValue(), service)) {
+        if (Objects.equals(Tariffs.ALPHA2.getValue(), service)) {
             price = calculateRatingAlphaB(isNightPeriod, bucketB, counterB);
         }
-        if (Objects.equals(TariffAlpha.ALPHA3.getValue(), service)) {
+        if (Objects.equals(Tariffs.ALPHA3.getValue(), service)) {
             price = calculateRatingAlphaC(isWeekEnd, bucketC, counterC);
         }
 
@@ -60,15 +61,15 @@ public class Alpha {
     }
 
     private String whereToCharge(String service, Boolean isRoaming, Integer counterB) {
-        if (Objects.equals(TariffAlpha.ALPHA1.getValue(), service)) {
-            if (!isRoaming) return "bucketA";
+        if (Objects.equals(Tariffs.ALPHA1.getValue(), service)) {
+            if (!isRoaming) return Buckets.BUCKET_A.getValue();
             else {
-                return counterB > 5 ? "bucketB" : "bucketC";
+                return counterB > 5 ? Buckets.BUCKET_B.getValue() : Buckets.BUCKET_C.getValue();
             }
         }
-        if (Objects.equals(TariffAlpha.ALPHA2.getValue(), service)) return "bucketB";
+        if (Objects.equals(Tariffs.ALPHA2.getValue(), service)) return Buckets.BUCKET_B.getValue();
 
-        if (Objects.equals(TariffAlpha.ALPHA3.getValue(), service)) return "bucketC";
+        if (Objects.equals(Tariffs.ALPHA3.getValue(), service)) return Buckets.BUCKET_C.getValue();
 
         return null;
     }

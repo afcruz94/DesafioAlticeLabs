@@ -1,13 +1,12 @@
 package org.example.enums;
 
-public enum TariffBeta {
-    BETA1("A"),
-    BETA2("B"),
-    BETA3("C");
-
+public enum Buckets {
+    BUCKET_A("bucketA"),
+    BUCKET_B("bucketB"),
+    BUCKET_C("bucketC");
     private final String value;
 
-    TariffBeta(String value) {
+    Buckets(String value) {
         this.value = value;
     }
 

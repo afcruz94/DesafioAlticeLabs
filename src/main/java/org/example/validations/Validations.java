@@ -1,13 +1,14 @@
 package org.example.validations;
 
-import org.example.service.Service;
+import org.example.enums.Services;
 import java.util.Arrays;
+import java.util.Objects;
 
-public class Validations {
+public final class Validations {
     public static boolean isValidChargingRequest(Character service, Boolean roaming, Integer msisdn, Integer rsu) {
         int errorCount = 0;
 
-        if (!Service.isValidService(service)) errorCount++;
+        if (!isValidService(service)) errorCount++;
         if (!isBoolean(roaming.toString())) errorCount++;
         if (!isValidValue(msisdn.toString())) errorCount++;
         if (!isValidRsu(rsu)) errorCount++;
@@ -25,5 +26,13 @@ public class Validations {
 
     private static boolean isValidRsu(Integer value) {
         return value > 0;
+    }
+
+    public static Boolean isValidService(Character c) {
+        for (Services s : Services.values()) {
+            if (Objects.equals(s.getValue(), c.toString())) return true;
+        }
+
+        return false;
     }
 }

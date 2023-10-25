@@ -3,7 +3,7 @@ package org.example.service.tariffs;
 import org.example.enums.Services;
 
 public class Tariff {
-    private Character service;
+    private final Character service;
     protected String name;
     protected Float rating;
     protected String charging;
@@ -22,10 +22,6 @@ public class Tariff {
                 counterA, counterB, counterC, bucketB, bucketC);
     }
 
-    public Character getService() {
-        return service;
-    }
-
     public String getName() {
         return name;
     }
@@ -41,14 +37,14 @@ public class Tariff {
     public void findTariffByService(Boolean onlyWeekdays, Boolean isRoaming, Boolean isNightPeriod,
                                     Integer counterA, Integer counterB, Integer counterC,
                                     Float bucketB, Float bucketC) {
-        if (Services.valueOf(service.toString()) == Services.A) {
+        if (Services.valueOf(this.service.toString()) == Services.A) {
             Alpha a = new Alpha(onlyWeekdays, isRoaming, isNightPeriod, counterA, counterB, counterC, bucketB, bucketC);
             this.name = a.getName();
             this.rating = a.getRating();
             this.charging = a.getCharging();
 
         } else {
-            new Beta(service);
+            new Beta(this.service);
         }
     }
 }
