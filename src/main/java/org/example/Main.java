@@ -4,6 +4,7 @@ import org.example.billing.BillingAccount;
 import org.example.charging.ChargingRequest;
 import org.example.service.Service;
 import org.example.service.tariffs.Tariff;
+import org.example.validations.Validations;
 
 public class Main {
     public static void main(String[] args) {
@@ -15,7 +16,7 @@ public class Main {
         Float bucketA = 5f, bucketB = 10f, bucketC = 100f;
 
         // Validation of Charging Request
-        boolean validation = ChargingRequest.isValidChargingRequest(serviceChar, roaming, msisdn, rsu);
+        boolean validation = Validations.isValidChargingRequest(serviceChar, roaming, msisdn, rsu);
 
         if (validation) {
             // Create Billing Account
