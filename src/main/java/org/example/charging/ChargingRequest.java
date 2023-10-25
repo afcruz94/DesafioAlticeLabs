@@ -4,16 +4,15 @@ import org.example.service.Service;
 
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.Arrays;
 import java.util.UUID;
 
 public class ChargingRequest {
-    private String requestId;
-    private Timestamp timestamp;
-    private Service service;
+    private final String requestId;
+    private final Timestamp timestamp;
+    private final Service service;
     private Boolean roaming;
     private Integer msisdn;
-    private Integer rsu;
+    private final Integer rsu;
 
     public ChargingRequest(Service service, Boolean roaming, Integer msisdn, Integer rsu) {
         this.requestId = UUID.randomUUID().toString();
@@ -40,16 +39,8 @@ public class ChargingRequest {
         return roaming;
     }
 
-    public void setRoaming(Boolean roaming) {
-        this.roaming = roaming;
-    }
-
     public Integer getMsisdn() {
         return msisdn;
-    }
-
-    public void setMsisdn(Integer msisdn) {
-        this.msisdn = msisdn;
     }
 
     public Integer getRsu() {

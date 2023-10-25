@@ -15,7 +15,7 @@ public class Tariff {
     public Tariff(Character service,
                   Boolean onlyWeekdays, Boolean isRoaming, Boolean isNightPeriod,
                   Integer counterA, Integer counterB, Integer counterC,
-                  Float bucketB, Float bucketC) {
+                  Float bucketA, Float bucketB, Float bucketC) {
         this.service = service;
 
         findTariffByService(onlyWeekdays, isRoaming, isNightPeriod,

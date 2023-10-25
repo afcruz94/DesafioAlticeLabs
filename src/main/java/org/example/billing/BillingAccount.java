@@ -2,11 +2,11 @@ package org.example.billing;
 
 import org.example.service.tariffs.Tariff;
 
-public class BillingAccount {
-    private Integer msisdn;
-    private Float bucketA;
-    private Float bucketB;
-    private Float bucketC;
+public final class BillingAccount {
+    private final Integer msisdn;
+    private final Float bucketA;
+    private final Float bucketB;
+    private final Float bucketC;
     private Integer counterA;
     private Integer counterB;
     private Integer counterC;
