@@ -1,47 +1,79 @@
 package org.example;
 
 import org.example.billing.BillingAccount;
+import org.example.cdr.ClientDataRecord;
+import org.example.charging.ChargingReply;
 import org.example.charging.ChargingRequest;
+import org.example.enums.Result;
 import org.example.service.Service;
-import org.example.service.tariffs.Tariff;
 import org.example.validations.Validations;
+
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        // Vars
-        Character serviceChar = 'A';
-        Boolean roaming = true, onlyWeekdays = true, isNightPeriod = false;
-        Integer msisdn = 919919919;
-        Integer rsu = 2;
-        Integer counterA = 50, counterB = 50, counterC = 50;
-        Float bucketA = 5f, bucketB = 10f, bucketC = 100f;
+        // Start Variables
+        char serviceChar;
+        boolean roaming, onlyWeekdays, nightPeriod;
+        long msisdn;
+        float totalCost;
+        int rsu;
+        String tariff, bucket;
+        Result result;
 
-        // Validation of Charging Request
-        boolean validation = Validations.isValidChargingRequest(serviceChar, roaming, msisdn, rsu);
 
-        if (validation) {
-            // Create Billing Account
-            BillingAccount billingAccount = new BillingAccount(msisdn, bucketA, bucketB, bucketC);
+        // Validation of Charging Request (check by service which vars are needed)
+        do {
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("Enter the desired service (A/B): ");
+            serviceChar = scanner.next().charAt(0);
+            System.out.println("Roaming needed (y/n)? ");
+            char r = scanner.next().charAt(0);
+            roaming = r == 'y';
+            System.out.println("Only Weekdays (y/n)? ");
+            char ow = scanner.next().charAt(0);
+            onlyWeekdays = ow == 'y';
+            System.out.println("Night Period (y/n)? ");
+            char np = scanner.next().charAt(0);
+            nightPeriod = np == 'y';
+            System.out.println("Enter the MSISDN (15 digits max): ");
+            msisdn = scanner.nextLong();
+            System.out.println("Enter the Requested Service Units: ");
+            rsu = scanner.nextInt();
 
-            // Create Already Validated Service
-            Service service = new Service(serviceChar);
+            scanner.nextLine();
+        } while (!Validations.isValidChargingRequest(serviceChar, roaming, onlyWeekdays, nightPeriod, msisdn, rsu));
 
-            // Create Charging Request
-            ChargingRequest chargingRequest = new ChargingRequest(service, roaming, billingAccount.getMsisdn(), rsu);
+        // Create Charging Request
+        ChargingRequest chargingRequest = new ChargingRequest(serviceChar, roaming, msisdn, rsu);
 
-            // Get Phone Tariff + Calculate Total Cost + Apply Discounts + Find bucket where value will be charged
-            Tariff tariff = new Tariff(
-                    service.getService(),
-                    onlyWeekdays, chargingRequest.getRoaming(), isNightPeriod,
-                    counterA, counterB, counterC,
-                    billingAccount.getBucketA(), billingAccount.getBucketB(), billingAccount.getBucketC());
+        // Create Service
+        Service service = new Service(chargingRequest.getService(), onlyWeekdays, chargingRequest.getRoaming(), nightPeriod, chargingRequest.getMsisdn());
 
-            System.out.println(tariff.getName() + " " + tariff.getRating() + " " + tariff.getCharging());
+        if (service.getTariff() != null) {
+            // Tariff + Bucket
+            tariff = service.getTariff().getName();
+            bucket = service.getTariff().getCharging();
+            // Calculate total cost
+            totalCost = service.getTariff().getRating() * chargingRequest.getRsu();
+            // Result
+            result = service.getTariff().getResult();
         } else {
             // Non Eligible Response
-            System.out.println("non eligible response");
+            bucket = "";
+            tariff = "";
+            totalCost = 0;
+            result = Result.NOT_ELIGIBLE;
+            chargingRequest.setRsu(0);
         }
 
+        // Charging Reply
+        ChargingReply chargingReply = new ChargingReply(chargingRequest.getRequestId(), result, chargingRequest.getRsu());
+
         // CDR Transaction
+//        ClientDataRecord cdr = new ClientDataRecord(chargingRequest.getTimestamp(), chargingRequest.getMsisdn(),
+//                service.getService(), chargingReply,
+//                new Integer[]{bucket, totalCost}, new Integer[]{0, 0},
+//                tariff);
     }
 }

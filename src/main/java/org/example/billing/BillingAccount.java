@@ -3,10 +3,10 @@ package org.example.billing;
 import org.example.service.tariffs.Tariff;
 
 public final class BillingAccount {
-    private final Integer msisdn;
-    private final Float bucketA;
-    private final Float bucketB;
-    private final Float bucketC;
+    private final Long msisdn;
+    private final Integer bucketA;
+    private final Integer bucketB;
+    private final Integer bucketC;
     private Integer counterA;
     private Integer counterB;
     private Integer counterC;
@@ -14,14 +14,17 @@ public final class BillingAccount {
     private Tariff tariffA;
     private Tariff tariffB;
 
-    public BillingAccount(Integer msisdn, Float bucketA, Float bucketB, Float bucketC) {
+    public BillingAccount(Long msisdn) {
         this.msisdn = msisdn;
-        this.bucketA = bucketA;
-        this.bucketB = bucketB;
-        this.bucketC = bucketC;
+        this.bucketA = (int) (Math.random() * 50 + 1);
+        this.bucketB = (int) (Math.random() * 50 + 1);
+        this.bucketC = (int) (Math.random() * 50 + 1);
+        this.counterA = 0;
+        this.counterB = 0;
+        this.counterC = 0;
     }
 
-    public BillingAccount(Integer msisdn, Float bucketA, Float bucketB, Float bucketC, Integer counterA, Integer counterB, Integer counterC, Integer counterD, Tariff tariffA, Tariff tariffB) {
+    public BillingAccount(Long msisdn, Integer bucketA, Integer bucketB, Integer bucketC, Integer counterA, Integer counterB, Integer counterC, Integer counterD, Tariff tariffA, Tariff tariffB) {
         this.msisdn = msisdn;
         this.bucketA = bucketA;
         this.bucketB = bucketB;
@@ -34,19 +37,19 @@ public final class BillingAccount {
         this.tariffB = tariffB;
     }
 
-    public Integer getMsisdn() {
+    public Long getMsisdn() {
         return msisdn;
     }
 
-    public Float getBucketA() {
+    public Integer getBucketA() {
         return bucketA;
     }
 
-    public Float getBucketB() {
+    public Integer getBucketB() {
         return bucketB;
     }
 
-    public Float getBucketC() {
+    public Integer getBucketC() {
         return bucketC;
     }
 

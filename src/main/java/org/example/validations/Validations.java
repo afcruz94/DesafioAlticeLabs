@@ -1,15 +1,20 @@
 package org.example.validations;
 
 import org.example.enums.Services;
+
 import java.util.Arrays;
 import java.util.Objects;
 
 public final class Validations {
-    public static boolean isValidChargingRequest(Character service, Boolean roaming, Integer msisdn, Integer rsu) {
+    public static boolean isValidChargingRequest(Character service,
+                                                 Boolean roaming, Boolean onlyWeekdays, Boolean nightPeriod,
+                                                 Long msisdn, Integer rsu) {
         int errorCount = 0;
 
         if (!isValidService(service)) errorCount++;
         if (!isBoolean(roaming.toString())) errorCount++;
+        if (!isBoolean(onlyWeekdays.toString())) errorCount++;
+        if (!isBoolean(nightPeriod.toString())) errorCount++;
         if (!isValidValue(msisdn.toString())) errorCount++;
         if (!isValidRsu(rsu)) errorCount++;
 
@@ -21,7 +26,7 @@ public final class Validations {
     }
 
     private static boolean isValidValue(String text) {
-        return text.length() == 9;
+        return !text.isEmpty() && text.length() <= 15;
     }
 
     private static boolean isValidRsu(Integer value) {

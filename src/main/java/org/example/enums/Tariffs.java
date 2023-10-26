@@ -2,7 +2,7 @@ package org.example.enums;
 
 public enum Tariffs {
     ALPHA1("Alpha A"),
-    ALPHA2("Alpha  B"),
+    ALPHA2("Alpha B"),
     ALPHA3("Alpha C"),
     BETA1("Beta A"),
     BETA2("Beta B"),

@@ -1,7 +1,5 @@
 package org.example.charging;
 
-import org.example.service.Service;
-
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.UUID;
@@ -9,12 +7,12 @@ import java.util.UUID;
 public class ChargingRequest {
     private final String requestId;
     private final Timestamp timestamp;
-    private final Service service;
-    private Boolean roaming;
-    private Integer msisdn;
-    private final Integer rsu;
+    private final Character service;
+    private final Boolean roaming;
+    private final Long msisdn;
+    private Integer rsu;
 
-    public ChargingRequest(Service service, Boolean roaming, Integer msisdn, Integer rsu) {
+    public ChargingRequest(Character service, Boolean roaming, Long msisdn, Integer rsu) {
         this.requestId = UUID.randomUUID().toString();
         this.timestamp = Timestamp.from(Instant.now());
         this.service = service;
@@ -31,7 +29,7 @@ public class ChargingRequest {
         return timestamp;
     }
 
-    public Service getService() {
+    public Character getService() {
         return service;
     }
 
@@ -39,12 +37,16 @@ public class ChargingRequest {
         return roaming;
     }
 
-    public Integer getMsisdn() {
+    public Long getMsisdn() {
         return msisdn;
     }
 
     public Integer getRsu() {
         return rsu;
+    }
+
+    public void setRsu(Integer rsu) {
+        this.rsu = rsu;
     }
 
     @Override

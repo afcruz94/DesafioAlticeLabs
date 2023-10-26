@@ -1,25 +1,17 @@
 package org.example.service.tariffs;
 
-import org.example.enums.Services;
+import org.example.enums.Result;
 
-public class Tariff {
-    private final Character service;
-    protected String name;
-    protected Float rating;
-    protected String charging;
+import java.util.List;
 
-    public Tariff(Character service) {
-        this.service = service;
-    }
+public abstract class Tariff {
+    private String name;
+    private Float rating;
+    private String charging;
 
-    public Tariff(Character service,
-                  Boolean onlyWeekdays, Boolean isRoaming, Boolean isNightPeriod,
-                  Integer counterA, Integer counterB, Integer counterC,
-                  Float bucketA, Float bucketB, Float bucketC) {
-        this.service = service;
+    private Result result;
 
-        findTariffByService(onlyWeekdays, isRoaming, isNightPeriod,
-                counterA, counterB, counterC, bucketB, bucketC);
+    public Tariff() {
     }
 
     public String getName() {
@@ -34,17 +26,22 @@ public class Tariff {
         return charging;
     }
 
-    public void findTariffByService(Boolean onlyWeekdays, Boolean isRoaming, Boolean isNightPeriod,
-                                    Integer counterA, Integer counterB, Integer counterC,
-                                    Float bucketB, Float bucketC) {
-        if (Services.valueOf(this.service.toString()) == Services.A) {
-            Alpha a = new Alpha(onlyWeekdays, isRoaming, isNightPeriod, counterA, counterB, counterC, bucketB, bucketC);
-            this.name = a.getName();
-            this.rating = a.getRating();
-            this.charging = a.getCharging();
-
-        } else {
-            new Beta(this.service);
-        }
+    public Result getResult() {
+        return result;
     }
+
+    abstract List<String> checkEligibility(Boolean onlyWeekdays, Integer counterA, Boolean roaming, Integer[] buckets);
+
+    abstract Float priceForUnit(String service, Boolean isRoaming, Boolean isNightPeriod, Boolean isWeekEnd,
+                                Integer[] buckets, Integer[] counters);
+
+    abstract String whereToCharge(String service, Boolean isRoaming, Integer counter);
+
+    abstract Boolean isPossibleToGetTheMoney(String bucket, Integer[] buckets, Float value);
+
+    abstract Float calculateRatingAlphaA(Boolean isRoaming, Boolean isNightPeriod, Integer bucket, Integer counter);
+
+    abstract Float calculateRatingAlphaB(Boolean isNightPeriod, Integer bucket, Integer counter);
+
+    abstract Float calculateRatingAlphaC(Boolean isWeekEnd, Integer bucket, Integer counter);
 }
