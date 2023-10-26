@@ -42,7 +42,6 @@ public class Service {
      * @param billingAccount Billing Account
      * @return Tariff (Alpha/Beta)
      */
-
     private Tariff findTariffByService(Character service, Boolean onlyWeekdays, Boolean isRoaming, Boolean isNightPeriod,
                                        Integer minutes, BillingAccount billingAccount) {
         Integer[] counters = new Integer[]{billingAccount.getCounterA(), billingAccount.getCounterB(), billingAccount.getCounterC()};

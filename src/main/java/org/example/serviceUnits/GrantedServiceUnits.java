@@ -13,15 +13,6 @@ public class GrantedServiceUnits extends ServiceUnits {
         this.tariff = tariff;
     }
 
-    @Override
-    public String toString() {
-        return "GrantedServiceUnits{" +
-                "tariff='" + tariff + '\'' +
-                ", bucket='" + bucket + '\'' +
-                ", totalCost=" + totalCost +
-                "} " + super.toString();
-    }
-
     public String getTariff() {
         return tariff;
     }
