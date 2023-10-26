@@ -11,7 +11,14 @@ public abstract class Tariff {
 
     private Result result;
 
-    public Tariff() {
+    protected Tariff() {
+    }
+
+    protected Tariff(String name, Float rating, String charging, Result result) {
+        this.name = name;
+        this.rating = rating;
+        this.charging = charging;
+        this.result = result;
     }
 
     public String getName() {
@@ -30,7 +37,8 @@ public abstract class Tariff {
         return result;
     }
 
-    abstract List<String> checkEligibility(Boolean onlyWeekdays, Integer counterA, Boolean roaming, Float[] buckets);
+    abstract List<String> checkEligibilityAlpha(Boolean onlyWeekdays, Integer counterA, Boolean roaming, Float[] buckets);
+    abstract List<String> checkEligibilityBeta(Boolean onlyWeekdays, Boolean isNightPeriod, Integer counterA, Boolean roaming, Float[] buckets);
 
     abstract Float priceForUnit(String service, Boolean isRoaming, Boolean isNightPeriod, Boolean isWeekEnd,
                                 Float[] buckets, Integer[] counters);
@@ -39,9 +47,9 @@ public abstract class Tariff {
 
     abstract Boolean isPossibleToGetTheMoney(String bucket, Float[] buckets, Float value);
 
-    abstract Float calculateRatingAlphaA(Boolean isRoaming, Boolean isNightPeriod, Float bucket, Integer counter);
+    abstract Float calculateRatingA(Boolean isRoaming, Boolean isNightPeriod, Float bucket, Integer counter);
 
-    abstract Float calculateRatingAlphaB(Boolean isNightPeriod, Float bucket, Integer counter);
+    abstract Float calculateRatingB(Boolean isNightPeriod, Float bucket, Integer counter);
 
-    abstract Float calculateRatingAlphaC(Boolean isWeekEnd, Float bucket, Integer counter);
+    abstract Float calculateRatingC(Boolean isWeekEnd, Float bucket, Integer counter);
 }

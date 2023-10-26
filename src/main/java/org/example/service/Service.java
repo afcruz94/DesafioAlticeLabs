@@ -31,7 +31,7 @@ public class Service {
             t = new Alpha(onlyWeekdays, isRoaming, isNightPeriod, minutes, counters, buckets);
 
         } else {
-            t = new Beta(this.service);
+            t = new Beta(onlyWeekdays, isRoaming, isNightPeriod, minutes, counters, buckets);
         }
 
         return t;
