@@ -6,6 +6,8 @@ import org.example.charging.ChargingReply;
 import org.example.charging.ChargingRequest;
 import org.example.enums.Result;
 import org.example.service.Service;
+import org.example.serviceUnits.GrantedServiceUnits;
+import org.example.serviceUnits.RequestedServiceUnits;
 import org.example.validations.Validations;
 
 import java.util.Scanner;
@@ -18,7 +20,7 @@ public class Main {
         long msisdn;
         float totalCost;
         int rsu;
-        String tariff, bucket;
+        String tariffName, bucketName;
         Result result;
 
 
@@ -44,36 +46,45 @@ public class Main {
             scanner.nextLine();
         } while (!Validations.isValidChargingRequest(serviceChar, roaming, onlyWeekdays, nightPeriod, msisdn, rsu));
 
+        // Create Request Service Unit
+        RequestedServiceUnits requestedServiceUnits = new RequestedServiceUnits(serviceChar, roaming, onlyWeekdays, nightPeriod, msisdn, rsu);
+
         // Create Charging Request
-        ChargingRequest chargingRequest = new ChargingRequest(serviceChar, roaming, msisdn, rsu);
+        ChargingRequest chargingRequest = new ChargingRequest(requestedServiceUnits);
 
-        // Create Service
-        Service service = new Service(chargingRequest.getService(), onlyWeekdays, chargingRequest.getRoaming(), nightPeriod, chargingRequest.getMsisdn());
+        // Create Billing Account
+        BillingAccount billingAccount = new BillingAccount(requestedServiceUnits.getMsisdn());
+        Integer[] counters = new Integer[]{billingAccount.getCounterA(), billingAccount.getCounterB(), billingAccount.getCounterC()};
+        Float[] buckets = new Float[]{billingAccount.getBucketA(), billingAccount.getBucketB(), billingAccount.getBucketC()};
 
-        if (service.getTariff() != null) {
-            // Tariff + Bucket
-            tariff = service.getTariff().getName();
-            bucket = service.getTariff().getCharging();
-            // Calculate total cost
-            totalCost = service.getTariff().getRating() * chargingRequest.getRsu();
-            // Result
+        // Create Service and get the best tariff
+        Service service = new Service(chargingRequest.getService(), chargingRequest.getRoaming(),
+                requestedServiceUnits.getOnlyWeekdays(), requestedServiceUnits.getNightPeriod(), requestedServiceUnits.getMinutes(),
+                counters, buckets);
+
+        if (service.getTariff().getResult() != Result.NOT_ELIGIBLE) {
+            tariffName = service.getTariff().getName();
+            bucketName = service.getTariff().getCharging();
+            totalCost = service.getTariff().getRating();
             result = service.getTariff().getResult();
         } else {
             // Non Eligible Response
-            bucket = "";
-            tariff = "";
+            tariffName = "";
+            bucketName = "";
             totalCost = 0;
             result = Result.NOT_ELIGIBLE;
-            chargingRequest.setRsu(0);
         }
 
+        // Create Granted Service Unit
+        GrantedServiceUnits grantedServiceUnits = new GrantedServiceUnits(requestedServiceUnits, tariffName, bucketName, totalCost);
+
         // Charging Reply
-        ChargingReply chargingReply = new ChargingReply(chargingRequest.getRequestId(), result, chargingRequest.getRsu());
+        ChargingReply chargingReply = new ChargingReply(chargingRequest.getRequestId(), result, grantedServiceUnits);
 
         // CDR Transaction
-//        ClientDataRecord cdr = new ClientDataRecord(chargingRequest.getTimestamp(), chargingRequest.getMsisdn(),
-//                service.getService(), chargingReply,
-//                new Integer[]{bucket, totalCost}, new Integer[]{0, 0},
-//                tariff);
+        ClientDataRecord cdr = new ClientDataRecord(chargingRequest.getTimestamp(), chargingRequest.getMsisdn(),
+                service.getService(), chargingReply, buckets, counters, tariffName);
+
+        System.out.println(cdr);
     }
 }

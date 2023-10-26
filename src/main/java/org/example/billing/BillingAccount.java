@@ -4,9 +4,9 @@ import org.example.service.tariffs.Tariff;
 
 public final class BillingAccount {
     private final Long msisdn;
-    private final Integer bucketA;
-    private final Integer bucketB;
-    private final Integer bucketC;
+    private final Float bucketA;
+    private final Float bucketB;
+    private final Float bucketC;
     private Integer counterA;
     private Integer counterB;
     private Integer counterC;
@@ -16,15 +16,15 @@ public final class BillingAccount {
 
     public BillingAccount(Long msisdn) {
         this.msisdn = msisdn;
-        this.bucketA = (int) (Math.random() * 50 + 1);
-        this.bucketB = (int) (Math.random() * 50 + 1);
-        this.bucketC = (int) (Math.random() * 50 + 1);
+        this.bucketA = (float) (Math.random() * 50 + 1);
+        this.bucketB = (float) (Math.random() * 50 + 1);
+        this.bucketC = (float) (Math.random() * 50 + 1);
         this.counterA = 0;
         this.counterB = 0;
         this.counterC = 0;
     }
 
-    public BillingAccount(Long msisdn, Integer bucketA, Integer bucketB, Integer bucketC, Integer counterA, Integer counterB, Integer counterC, Integer counterD, Tariff tariffA, Tariff tariffB) {
+    public BillingAccount(Long msisdn, Float bucketA, Float bucketB, Float bucketC, Integer counterA, Integer counterB, Integer counterC, Integer counterD, Tariff tariffA, Tariff tariffB) {
         this.msisdn = msisdn;
         this.bucketA = bucketA;
         this.bucketB = bucketB;
@@ -41,15 +41,15 @@ public final class BillingAccount {
         return msisdn;
     }
 
-    public Integer getBucketA() {
+    public Float getBucketA() {
         return bucketA;
     }
 
-    public Integer getBucketB() {
+    public Float getBucketB() {
         return bucketB;
     }
 
-    public Integer getBucketC() {
+    public Float getBucketC() {
         return bucketC;
     }
 

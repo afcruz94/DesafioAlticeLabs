@@ -8,12 +8,12 @@ public class Beta extends Tariff {
     }
 
     @Override
-    List<String> checkEligibility(Boolean onlyWeekdays, Integer counterA, Boolean roaming, Integer[] buckets) {
+    List<String> checkEligibility(Boolean onlyWeekdays, Integer counterA, Boolean roaming, Float[] buckets) {
         return null;
     }
 
     @Override
-    Float priceForUnit(String service, Boolean isRoaming, Boolean isNightPeriod, Boolean isWeekEnd, Integer[] buckets, Integer[] counters) {
+    Float priceForUnit(String service, Boolean isRoaming, Boolean isNightPeriod, Boolean isWeekEnd, Float[] buckets, Integer[] counters) {
         return null;
     }
 
@@ -23,22 +23,22 @@ public class Beta extends Tariff {
     }
 
     @Override
-    Boolean isPossibleToGetTheMoney(String bucket, Integer[] buckets, Float value) {
+    Boolean isPossibleToGetTheMoney(String bucket, Float[] buckets, Float value) {
         return null;
     }
 
     @Override
-    Float calculateRatingAlphaA(Boolean isRoaming, Boolean isNightPeriod, Integer bucket, Integer counter) {
+    Float calculateRatingAlphaA(Boolean isRoaming, Boolean isNightPeriod, Float bucket, Integer counter) {
         return null;
     }
 
     @Override
-    Float calculateRatingAlphaB(Boolean isNightPeriod, Integer bucket, Integer counter) {
+    Float calculateRatingAlphaB(Boolean isNightPeriod, Float bucket, Integer counter) {
         return null;
     }
 
     @Override
-    Float calculateRatingAlphaC(Boolean isWeekEnd, Integer bucket, Integer counter) {
+    Float calculateRatingAlphaC(Boolean isWeekEnd, Float bucket, Integer counter) {
         return null;
     }
 }

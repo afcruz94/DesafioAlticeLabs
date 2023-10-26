@@ -16,8 +16,7 @@ public class Alpha extends Tariff {
     private final Result result;
 
     public Alpha(Boolean onlyWeekdays, Boolean isRoaming, Boolean isNightPeriod,
-                 Integer[] counters,
-                 Integer[] buckets) {
+                 Integer minutes, Integer[] counters, Float[] buckets) {
         super();
 
         HashMap<String, Float> getPricesForAlphas = new HashMap<>();
@@ -45,9 +44,9 @@ public class Alpha extends Tariff {
         String bucketId = whereToCharge(key, isRoaming, counters[1]);
         if (!bucketId.isEmpty()) {
             this.name = key;
-            this.rating = smallestValue;
+            this.rating = minutes * smallestValue;
             this.charging = bucketId;
-            this.result = isPossibleToGetTheMoney(bucketId, buckets, smallestValue) ? Result.OK : Result.CREDIT_LIMIT_REACHED;
+            this.result = isPossibleToGetTheMoney(bucketId, buckets, minutes * smallestValue) ? Result.OK : Result.CREDIT_LIMIT_REACHED;
         } else {
             this.name = null;
             this.rating = null;
@@ -73,12 +72,12 @@ public class Alpha extends Tariff {
     }
 
     @Override
-    protected List<String> checkEligibility(Boolean onlyWeekdays, Integer counterA, Boolean roaming, Integer[] buckets) {
+    protected List<String> checkEligibility(Boolean onlyWeekdays, Integer counterA, Boolean roaming, Float[] buckets) {
         List<String> res = new ArrayList<>();
 
         if (!roaming) {
             if (onlyWeekdays && counterA < 100) res.add(Tariffs.ALPHA1.getValue());
-            if (buckets[1] > 100) res.add(Tariffs.ALPHA2.getValue());
+            if (buckets[1] > 10) res.add(Tariffs.ALPHA2.getValue());
         } else {
             if (onlyWeekdays && counterA < 100) res.add(Tariffs.ALPHA1.getValue());
             if (buckets[2] > 10) res.add(Tariffs.ALPHA3.getValue());
@@ -88,7 +87,7 @@ public class Alpha extends Tariff {
 
     @Override
     protected Float priceForUnit(String service, Boolean isRoaming, Boolean isNightPeriod, Boolean isWeekEnd,
-                                 Integer[] buckets, Integer[] counters) {
+                                 Float[] buckets, Integer[] counters) {
         float price = 0f;
 
         if (Objects.equals(Tariffs.ALPHA1.getValue(), service)) {
@@ -123,7 +122,7 @@ public class Alpha extends Tariff {
     }
 
     @Override
-    protected Boolean isPossibleToGetTheMoney(String bucket, Integer[] buckets, Float value) {
+    protected Boolean isPossibleToGetTheMoney(String bucket, Float[] buckets, Float value) {
         if (Objects.equals(Buckets.BUCKET_A.getValue(), bucket)) return buckets[0] - value >= 0;
 
         if (Objects.equals(Buckets.BUCKET_B.getValue(), bucket)) return buckets[1] - value >= 0;
@@ -134,7 +133,7 @@ public class Alpha extends Tariff {
     }
 
     @Override
-    protected Float calculateRatingAlphaA(Boolean isRoaming, Boolean isNightPeriod, Integer bucketC, Integer counterA) {
+    protected Float calculateRatingAlphaA(Boolean isRoaming, Boolean isNightPeriod, Float bucketC, Integer counterA) {
         float callCost = isRoaming ? 2f : isNightPeriod ? 0.5f : 1f;
         float discount = counterA >= 10 ? 0.25f : 0;
         if (bucketC > 50) discount += 0.1f;
@@ -143,7 +142,7 @@ public class Alpha extends Tariff {
     }
 
     @Override
-    protected Float calculateRatingAlphaB(Boolean isNightPeriod, Integer bucketB, Integer counterB) {
+    protected Float calculateRatingAlphaB(Boolean isNightPeriod, Float bucketB, Integer counterB) {
         float callCost = isNightPeriod ? 0.25f : 0.5f;
         float discount = counterB > 10 ? 0.2f : 0;
         if (bucketB > 15) discount += 0.05f;
@@ -152,7 +151,7 @@ public class Alpha extends Tariff {
     }
 
     @Override
-    protected Float calculateRatingAlphaC(Boolean isWeekEnd, Integer bucketC, Integer counterC) {
+    protected Float calculateRatingAlphaC(Boolean isWeekEnd, Float bucketC, Integer counterC) {
         float callCost = isWeekEnd ? 0.25f : 1f;
         float discount = counterC > 10 ? 0.2f : 0;
         if (bucketC > 15) discount += 0.05f;

@@ -10,9 +10,9 @@ public class Service {
     private final Character service;
     private final Tariff tariff;
 
-    public Service(Character service, Boolean onlyWeekdays, Boolean isRoaming, Boolean isNightPeriod, Long msisdn) {
+    public Service(Character service, Boolean isRoaming, Boolean onlyWeekdays, Boolean isNightPeriod, Integer minutes, Integer[] counters, Float[] buckets) {
         this.service = service;
-        this.tariff = findTariffByService(service, onlyWeekdays, isRoaming, isNightPeriod, msisdn);
+        this.tariff = findTariffByService(service, onlyWeekdays, isRoaming, isNightPeriod, minutes, counters, buckets);
     }
 
     public Character getService() {
@@ -23,20 +23,15 @@ public class Service {
         return tariff;
     }
 
-    private Tariff findTariffByService(Character service, Boolean onlyWeekdays, Boolean isRoaming, Boolean isNightPeriod, Long msisdn) {
+    private Tariff findTariffByService(Character service, Boolean onlyWeekdays, Boolean isRoaming, Boolean isNightPeriod,
+                                       Integer minutes, Integer[] counters, Float[] buckets) {
         Tariff t;
-        BillingAccount billingAccount = new BillingAccount(msisdn);
 
         if (Services.valueOf(service.toString()) == Services.A) {
-            Integer[] counters = new Integer[]{billingAccount.getCounterA(), billingAccount.getCounterB(), billingAccount.getCounterC()};
-            Integer[] buckets = new Integer[]{billingAccount.getBucketA(), billingAccount.getBucketB(), billingAccount.getBucketC()};
-
-            t = new Alpha(onlyWeekdays, isRoaming, isNightPeriod, counters, buckets);
+            t = new Alpha(onlyWeekdays, isRoaming, isNightPeriod, minutes, counters, buckets);
 
         } else {
             t = new Beta(this.service);
-
-            billingAccount.setTariffB(t);
         }
 
         return t;

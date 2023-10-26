@@ -30,18 +30,18 @@ public abstract class Tariff {
         return result;
     }
 
-    abstract List<String> checkEligibility(Boolean onlyWeekdays, Integer counterA, Boolean roaming, Integer[] buckets);
+    abstract List<String> checkEligibility(Boolean onlyWeekdays, Integer counterA, Boolean roaming, Float[] buckets);
 
     abstract Float priceForUnit(String service, Boolean isRoaming, Boolean isNightPeriod, Boolean isWeekEnd,
-                                Integer[] buckets, Integer[] counters);
+                                Float[] buckets, Integer[] counters);
 
     abstract String whereToCharge(String service, Boolean isRoaming, Integer counter);
 
-    abstract Boolean isPossibleToGetTheMoney(String bucket, Integer[] buckets, Float value);
+    abstract Boolean isPossibleToGetTheMoney(String bucket, Float[] buckets, Float value);
 
-    abstract Float calculateRatingAlphaA(Boolean isRoaming, Boolean isNightPeriod, Integer bucket, Integer counter);
+    abstract Float calculateRatingAlphaA(Boolean isRoaming, Boolean isNightPeriod, Float bucket, Integer counter);
 
-    abstract Float calculateRatingAlphaB(Boolean isNightPeriod, Integer bucket, Integer counter);
+    abstract Float calculateRatingAlphaB(Boolean isNightPeriod, Float bucket, Integer counter);
 
-    abstract Float calculateRatingAlphaC(Boolean isWeekEnd, Integer bucket, Integer counter);
+    abstract Float calculateRatingAlphaC(Boolean isWeekEnd, Float bucket, Integer counter);
 }
