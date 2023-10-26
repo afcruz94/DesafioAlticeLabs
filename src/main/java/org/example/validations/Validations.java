@@ -12,9 +12,9 @@ public final class Validations {
         int errorCount = 0;
 
         if (!isValidService(service)) errorCount++;
-        if (!isBoolean(roaming.toString())) errorCount++;
-        if (!isBoolean(onlyWeekdays.toString())) errorCount++;
-        if (!isBoolean(nightPeriod.toString())) errorCount++;
+        if (isBoolean(roaming.toString())) errorCount++;
+        if (isBoolean(onlyWeekdays.toString())) errorCount++;
+        if (isBoolean(nightPeriod.toString())) errorCount++;
         if (!isValidValue(msisdn.toString())) errorCount++;
         if (!isValidRsu(rsu)) errorCount++;
 
@@ -22,7 +22,7 @@ public final class Validations {
     }
 
     private static boolean isBoolean(String value) {
-        return value != null && Arrays.stream(new String[]{"true", "false", "1", "0"}).anyMatch(b -> b.equalsIgnoreCase(value));
+        return value == null || Arrays.stream(new String[]{"true", "false", "1", "0"}).noneMatch(b -> b.equalsIgnoreCase(value));
     }
 
     private static boolean isValidValue(String text) {

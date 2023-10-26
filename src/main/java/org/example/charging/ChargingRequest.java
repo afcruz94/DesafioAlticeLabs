@@ -46,9 +46,4 @@ public class ChargingRequest {
     public RequestedServiceUnits getRsu() {
         return rsu;
     }
-
-    @Override
-    public String toString() {
-        return "ChargingRequest{" + "requestId='" + requestId + '\'' + ", timestamp=" + timestamp + ", service=" + service + ", roaming=" + roaming + ", msisdn=" + msisdn + ", rsu=" + rsu + '}';
-    }
 }

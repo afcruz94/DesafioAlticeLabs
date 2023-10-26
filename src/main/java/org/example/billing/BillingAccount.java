@@ -2,6 +2,8 @@ package org.example.billing;
 
 import org.example.service.tariffs.Tariff;
 
+import java.sql.Timestamp;
+
 public final class BillingAccount {
     private final Long msisdn;
     private final Float bucketA;
@@ -10,7 +12,7 @@ public final class BillingAccount {
     private Integer counterA;
     private Integer counterB;
     private Integer counterC;
-    private Integer counterD;
+    private Timestamp counterD;
     private Tariff tariffA;
     private Tariff tariffB;
 
@@ -22,19 +24,6 @@ public final class BillingAccount {
         this.counterA = 0;
         this.counterB = 0;
         this.counterC = 0;
-    }
-
-    public BillingAccount(Long msisdn, Float bucketA, Float bucketB, Float bucketC, Integer counterA, Integer counterB, Integer counterC, Integer counterD, Tariff tariffA, Tariff tariffB) {
-        this.msisdn = msisdn;
-        this.bucketA = bucketA;
-        this.bucketB = bucketB;
-        this.bucketC = bucketC;
-        this.counterA = counterA;
-        this.counterB = counterB;
-        this.counterC = counterC;
-        this.counterD = counterD;
-        this.tariffA = tariffA;
-        this.tariffB = tariffB;
     }
 
     public Long getMsisdn() {
@@ -77,11 +66,11 @@ public final class BillingAccount {
         this.counterC = counterC;
     }
 
-    public Integer getCounterD() {
+    public Timestamp getCounterD() {
         return counterD;
     }
 
-    public void setCounterD(Integer counterD) {
+    public void setCounterD(Timestamp counterD) {
         this.counterD = counterD;
     }
 
