@@ -5,7 +5,7 @@ import org.example.charging.ChargingReply;
 
 import java.sql.Timestamp;
 
-public class ClientDataRecord {
+public class ClientDataRecord implements Comparable<ClientDataRecord> {
     private final Timestamp timestamp;
     private final Long msisdn;
     private final Character service;
@@ -25,6 +25,15 @@ public class ClientDataRecord {
         this.counters = new Integer[]{billingAccount.getCounterA(), billingAccount.getCounterB(), billingAccount.getCounterC()};
         this.counterD = billingAccount.getCounterD();
         this.tariffId = tariffId;
+    }
+
+    public Timestamp getTimestamp() {
+        return timestamp;
+    }
+
+    @Override
+    public int compareTo(ClientDataRecord o) {
+        return getTimestamp().compareTo(o.getTimestamp());
     }
 
     @Override

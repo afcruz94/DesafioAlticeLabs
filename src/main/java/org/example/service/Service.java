@@ -63,6 +63,8 @@ public class Service {
                 updateBillingAccountCounters(t, isRoaming, billingAccount, minutes);
         }
 
+        billingAccount.setCounterD(Timestamp.from(Instant.now()));
+
         return t;
     }
 
@@ -92,6 +94,5 @@ public class Service {
             counterC++;
             billingAccount.setCounterC(counterC);
         }
-        billingAccount.setCounterD(Timestamp.from(Instant.now()));
     }
 }

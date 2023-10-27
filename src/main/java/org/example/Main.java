@@ -10,10 +10,7 @@ import org.example.serviceUnits.GrantedServiceUnits;
 import org.example.serviceUnits.RequestedServiceUnits;
 import org.example.validations.Validations;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -65,6 +62,10 @@ public class Main {
             crs.add(implementService('B', false, false, false, (long) (r.nextDouble() * range), 20));
             crs.add(implementService('B', true, false, false, (long) (r.nextDouble() * range), 20));
 
+            // Reverse array list to be possible to sort by timestamp
+            Collections.reverse(crs);
+            // Sort by timestamp
+            Collections.sort(crs);
             for (ClientDataRecord cdr : crs) {
                 System.out.println(cdr);
                 System.out.println("=================");
@@ -89,7 +90,8 @@ public class Main {
 
         // Create Service and get the best tariff
         Service service = new Service(chargingRequest.getService(), chargingRequest.getRoaming(),
-                requestedServiceUnits.getOnlyWeekdays(), requestedServiceUnits.getNightPeriod(), requestedServiceUnits.getMinutes(),
+                chargingRequest.getRsu().getOnlyWeekdays(), chargingRequest.getRsu().getNightPeriod(),
+                chargingRequest.getRsu().getMinutes(),
                 billingAccount);
 
         if (service.getTariff() != null) {
@@ -107,7 +109,7 @@ public class Main {
             }
 
             // Create Granted Service Unit
-            GrantedServiceUnits grantedServiceUnits = new GrantedServiceUnits(requestedServiceUnits, tariffName, bucketName, totalCost);
+            GrantedServiceUnits grantedServiceUnits = new GrantedServiceUnits(chargingRequest.getRsu(), tariffName, bucketName, totalCost);
 
             // Charging Reply
             ChargingReply chargingReply = new ChargingReply(chargingRequest.getRequestId(), result, grantedServiceUnits);
