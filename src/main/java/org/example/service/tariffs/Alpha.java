@@ -21,7 +21,7 @@ public class Alpha extends Tariff {
 
         HashMap<String, Float> getPricesForAlphas = new HashMap<>();
         // Get List of all possible valid tariffs
-        List<String> listOptions = checkEligibilityAlpha(onlyWeekdays, counters[0], isRoaming, buckets);
+        List<String> listOptions = isEligibleToTariff(onlyWeekdays, isNightPeriod, counters[0], isRoaming, buckets);
 
         // Loop each one of them and get unit price with discount
         for (String s : listOptions) {
@@ -76,7 +76,7 @@ public class Alpha extends Tariff {
     }
 
     @Override
-    protected List<String> checkEligibilityAlpha(Boolean onlyWeekdays, Integer counterA, Boolean roaming, Float[] buckets) {
+    protected List<String> isEligibleToTariff(Boolean onlyWeekdays, Boolean isNightPeriod, Integer counterA, Boolean roaming, Float[] buckets) {
         List<String> res = new ArrayList<>();
 
         if (!roaming) {
@@ -87,11 +87,6 @@ public class Alpha extends Tariff {
             if (buckets[2] > 10) res.add(Tariffs.ALPHA3.getValue());
         }
         return res;
-    }
-
-    @Override
-    List<String> checkEligibilityBeta(Boolean onlyWeekdays, Boolean isNightPeriod, Integer counterA, Boolean roaming, Float[] buckets) {
-        return null;
     }
 
     @Override

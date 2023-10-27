@@ -7,6 +7,7 @@ import org.example.enums.Tariffs;
 import org.example.service.tariffs.Alpha;
 import org.example.service.tariffs.Beta;
 import org.example.service.tariffs.Tariff;
+import org.example.validations.Validations;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -44,17 +45,23 @@ public class Service {
      */
     private Tariff findTariffByService(Character service, Boolean onlyWeekdays, Boolean isRoaming, Boolean isNightPeriod,
                                        Integer minutes, BillingAccount billingAccount) {
-        Integer[] counters = new Integer[]{billingAccount.getCounterA(), billingAccount.getCounterB(), billingAccount.getCounterC()};
-        Float[] buckets = new Float[]{billingAccount.getBucketA(), billingAccount.getBucketB(), billingAccount.getBucketC()};
-        Tariff t;
+        Tariff t = null;
+        Integer[] counters = new Integer[]{0, 0, 0};
+        Float[] buckets = new Float[]{0f, 0f, 0f};
 
-        if (Services.valueOf(service.toString()) == Services.A) {
-            t = new Alpha(onlyWeekdays, isRoaming, isNightPeriod, minutes, counters, buckets);
-        } else {
-            t = new Beta(onlyWeekdays, isRoaming, isNightPeriod, minutes, counters, buckets);
+        if (Validations.isPossibleToCreateService(service, onlyWeekdays, isRoaming, isNightPeriod, minutes, billingAccount)) {
+            counters = new Integer[]{billingAccount.getCounterA(), billingAccount.getCounterB(), billingAccount.getCounterC()};
+            buckets = new Float[]{billingAccount.getBucketA(), billingAccount.getBucketB(), billingAccount.getBucketC()};
+
+            if (Services.valueOf(service.toString()) == Services.A) {
+                t = new Alpha(onlyWeekdays, isRoaming, isNightPeriod, minutes, counters, buckets);
+            } else {
+                t = new Beta(onlyWeekdays, isRoaming, isNightPeriod, minutes, counters, buckets);
+            }
+
+            if (t.getResult() != Result.NOT_ELIGIBLE)
+                updateBillingAccountCounters(t, isRoaming, billingAccount, minutes);
         }
-
-        if (t.getResult() != Result.NOT_ELIGIBLE) updateBillingAccountCounters(t, isRoaming, billingAccount, minutes);
 
         return t;
     }

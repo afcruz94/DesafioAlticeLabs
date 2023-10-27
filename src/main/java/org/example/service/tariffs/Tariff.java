@@ -38,17 +38,6 @@ public abstract class Tariff {
     }
 
     /**
-     * Check if is eligible for Alpha Tariffs
-     *
-     * @param onlyWeekdays Boolean
-     * @param counter      Integer
-     * @param roaming      Boolean
-     * @param buckets      Float[]
-     * @return List<String>
-     */
-    abstract List<String> checkEligibilityAlpha(Boolean onlyWeekdays, Integer counter, Boolean roaming, Float[] buckets);
-
-    /**
      * Check if is eligible for Beta Tariffs
      *
      * @param onlyWeekdays  Boolean
@@ -58,7 +47,7 @@ public abstract class Tariff {
      * @param buckets       Float[]
      * @return List<String>
      */
-    abstract List<String> checkEligibilityBeta(Boolean onlyWeekdays, Boolean isNightPeriod, Integer counter, Boolean roaming, Float[] buckets);
+    abstract List<String> isEligibleToTariff(Boolean onlyWeekdays, Boolean isNightPeriod, Integer counter, Boolean roaming, Float[] buckets);
 
     /**
      * Get unit price

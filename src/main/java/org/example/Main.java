@@ -92,27 +92,31 @@ public class Main {
                 requestedServiceUnits.getOnlyWeekdays(), requestedServiceUnits.getNightPeriod(), requestedServiceUnits.getMinutes(),
                 billingAccount);
 
-        if (service.getTariff().getResult() != Result.NOT_ELIGIBLE) {
-            tariffName = service.getTariff().getName();
-            bucketName = service.getTariff().getCharging();
-            totalCost = service.getTariff().getRating();
-            result = service.getTariff().getResult();
-        } else {
-            // Non Eligible Response
-            tariffName = "";
-            bucketName = "";
-            totalCost = 0f;
-            result = Result.NOT_ELIGIBLE;
+        if (service.getTariff() != null) {
+            if (service.getTariff().getResult() != Result.NOT_ELIGIBLE) {
+                tariffName = service.getTariff().getName();
+                bucketName = service.getTariff().getCharging();
+                totalCost = service.getTariff().getRating();
+                result = service.getTariff().getResult();
+            } else {
+                // Non Eligible Response
+                tariffName = "";
+                bucketName = "";
+                totalCost = 0f;
+                result = Result.NOT_ELIGIBLE;
+            }
+
+            // Create Granted Service Unit
+            GrantedServiceUnits grantedServiceUnits = new GrantedServiceUnits(requestedServiceUnits, tariffName, bucketName, totalCost);
+
+            // Charging Reply
+            ChargingReply chargingReply = new ChargingReply(chargingRequest.getRequestId(), result, grantedServiceUnits);
+
+            // CDR Transaction
+            return new ClientDataRecord(chargingRequest.getTimestamp(), chargingRequest.getMsisdn(),
+                    service.getService(), chargingReply, billingAccount, tariffName);
         }
 
-        // Create Granted Service Unit
-        GrantedServiceUnits grantedServiceUnits = new GrantedServiceUnits(requestedServiceUnits, tariffName, bucketName, totalCost);
-
-        // Charging Reply
-        ChargingReply chargingReply = new ChargingReply(chargingRequest.getRequestId(), result, grantedServiceUnits);
-
-        // CDR Transaction
-        return new ClientDataRecord(chargingRequest.getTimestamp(), chargingRequest.getMsisdn(),
-                service.getService(), chargingReply, billingAccount, tariffName);
+        return new ClientDataRecord(chargingRequest.getTimestamp(), chargingRequest.getMsisdn(), null, null, billingAccount, null);
     }
 }
