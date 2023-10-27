@@ -3,13 +3,15 @@ package org.example.service.tariffs;
 import org.example.enums.Buckets;
 import org.example.enums.Result;
 import org.example.enums.Tariffs;
+import org.example.service.tariffs.Variables.AlphaVariables;
+import org.example.service.tariffs.Variables.Variables;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-public class Alpha extends Tariff {
+public final class Alpha extends Tariff {
     private final String name;
     private final Float rating;
     private final String charging;
@@ -80,11 +82,11 @@ public class Alpha extends Tariff {
         List<String> res = new ArrayList<>();
 
         if (!roaming) {
-            if (onlyWeekdays && counterA < 100) res.add(Tariffs.ALPHA1.getValue());
-            if (buckets[1] > 10) res.add(Tariffs.ALPHA2.getValue());
+            if (onlyWeekdays && counterA < Variables.maxCounterA) res.add(Tariffs.ALPHA1.getValue());
+            if (buckets[1] > Variables.bucketB) res.add(Tariffs.ALPHA2.getValue());
         } else {
-            if (onlyWeekdays && counterA < 100) res.add(Tariffs.ALPHA1.getValue());
-            if (buckets[2] > 10) res.add(Tariffs.ALPHA3.getValue());
+            if (onlyWeekdays && counterA < Variables.maxCounterA) res.add(Tariffs.ALPHA1.getValue());
+            if (buckets[2] > Variables.bucketC) res.add(Tariffs.ALPHA3.getValue());
         }
         return res;
     }
@@ -103,7 +105,7 @@ public class Alpha extends Tariff {
         }
 
         if (Objects.equals(Tariffs.ALPHA3.getValue(), service)) {
-            price = calculateRatingC(isWeekEnd, buckets[2], counters[2]);
+            price = calculateRatingC(isWeekEnd, buckets[1], counters[1]);
         }
 
         return price;
@@ -114,7 +116,7 @@ public class Alpha extends Tariff {
         if (Objects.equals(Tariffs.ALPHA1.getValue(), service)) {
             if (!isRoaming) return Buckets.BUCKET_A.getValue();
             else {
-                return counterB > 5 ? Buckets.BUCKET_B.getValue() : Buckets.BUCKET_C.getValue();
+                return counterB > Variables.counterB ? Buckets.BUCKET_B.getValue() : Buckets.BUCKET_C.getValue();
             }
         }
 
@@ -138,27 +140,27 @@ public class Alpha extends Tariff {
 
     @Override
     protected Float calculateRatingA(Boolean isRoaming, Boolean isNightPeriod, Float bucketC, Integer counterA) {
-        float callCost = isRoaming ? 2f : isNightPeriod ? 0.5f : 1f;
-        float discount = counterA >= 10 ? 0.25f : 0;
-        if (bucketC > 50) discount += 0.1f;
+        float callCost = isRoaming ? AlphaVariables.alphaARoaming : isNightPeriod ? AlphaVariables.alphaALocalCallNightPeriod : AlphaVariables.alphaALocalCall;
+        float discount = counterA >= Variables.counterA ? AlphaVariables.alphaADiscountCounterA : 0;
+        if (bucketC > (Variables.bucketC + 40)) discount += AlphaVariables.alphaADiscountBucketC;
 
         return callCost - discount;
     }
 
     @Override
     protected Float calculateRatingB(Boolean isNightPeriod, Float bucketB, Integer counterB) {
-        float callCost = isNightPeriod ? 0.25f : 0.5f;
-        float discount = counterB > 10 ? 0.2f : 0;
-        if (bucketB > 15) discount += 0.05f;
+        float callCost = isNightPeriod ? AlphaVariables.alphaBLocalCallNightPeriod : AlphaVariables.alphaBLocalCall;
+        float discount = counterB > (Variables.counterA) ? AlphaVariables.alphaBDiscountCounterB : 0;
+        if (bucketB > (Variables.bucketB + 5)) discount += AlphaVariables.alphaBDiscountBucketB;
 
         return callCost - discount;
     }
 
     @Override
-    protected Float calculateRatingC(Boolean isWeekEnd, Float bucketC, Integer counterC) {
-        float callCost = isWeekEnd ? 0.25f : 1f;
-        float discount = counterC > 10 ? 0.2f : 0;
-        if (bucketC > 15) discount += 0.05f;
+    protected Float calculateRatingC(Boolean isWeekEnd, Float bucketB, Integer counterB) {
+        float callCost = isWeekEnd ? AlphaVariables.alphaCWeekend : AlphaVariables.alphaCRoaming;
+        float discount = counterB > (Variables.counterB + 5) ? AlphaVariables.alphaCDiscountCounterB : 0;
+        if (bucketB > (Variables.bucketB + 5)) discount += AlphaVariables.alphaCDiscountBucketB;
 
         return callCost - discount;
     }
